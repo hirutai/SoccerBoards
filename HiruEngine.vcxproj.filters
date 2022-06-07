@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="000_Engine">
+      <UniqueIdentifier>{53e0e483-cae7-4c1d-a961-2ac8342b5b28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="000_Engine\2D">
+      <UniqueIdentifier>{31ca9cde-0ac9-41c0-943e-e6375d5e792c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="000_Engine\3D">
+      <UniqueIdentifier>{25664012-bca2-4eb6-8558-92acfff8cc51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="000_Engine\Camera">
+      <UniqueIdentifier>{cca7ad50-c779-49ac-b0bd-f2e7042559da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="000_Engine\Input">
+      <UniqueIdentifier>{be2b9d5e-76a3-4109-8c6f-4cbdcbae3211}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="000_Engine\Sound">
+      <UniqueIdentifier>{5a0182cb-2b3a-4708-acdb-5795a88d6ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="000_Engine\Texture">
+      <UniqueIdentifier>{63fdd125-925b-4792-bb81-55cc22805539}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="000_Engine\Base">
+      <UniqueIdentifier>{2434c144-983a-4c81-947f-873aa3f42f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="001_Shader">
+      <UniqueIdentifier>{6a823b93-77bf-41f2-824f-570ced6dbf88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="002_Scene">
+      <UniqueIdentifier>{1db23cdb-00a4-494b-9626-10b39df1297e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="003_Game">
+      <UniqueIdentifier>{5fe99e01-03ce-4c3d-a36b-9dfb3f77c850}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="2D\Sprite.cpp">
+      <Filter>000_Engine\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="2D\DebugText.cpp">
+      <Filter>000_Engine\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Obj3dModel.cpp">
+      <Filter>000_Engine\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="3D\Obj3dObject.cpp">
+      <Filter>000_Engine\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>000_Engine\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SoundManager.cpp">
+      <Filter>000_Engine\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\TextureManager.cpp">
+      <Filter>000_Engine\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\DirectXInitialize.cpp">
+      <Filter>000_Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\WindowsApi.cpp">
+      <Filter>000_Engine\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>000_Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\BaseGame.cpp">
+      <Filter>002_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SoccerBoards.cpp">
+      <Filter>002_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\main.cpp">
+      <Filter>002_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\FieldPlayer.cpp">
+      <Filter>003_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\GoalKeaper.cpp">
+      <Filter>003_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Stadium.cpp">
+      <Filter>003_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Goal.cpp">
+      <Filter>003_Game</Filter>
+    </ClCompile>
+    <ClCompile Include="SoccerBall.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="2D\Sprite.h">
+      <Filter>000_Engine\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="2D\DebugText.h">
+      <Filter>000_Engine\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Obj3dModel.h">
+      <Filter>000_Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3D\Obj3dObject.h">
+      <Filter>000_Engine\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>000_Engine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SoundManager.h">
+      <Filter>000_Engine\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TextureManager.h">
+      <Filter>000_Engine\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\DirectXInitialize.h">
+      <Filter>000_Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\WindowsApi.h">
+      <Filter>000_Engine\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Input.h">
+      <Filter>000_Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\BaseGame.h">
+      <Filter>002_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SoccerBoards.h">
+      <Filter>002_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\FieldPlayer.h">
+      <Filter>003_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\GoalKeaper.h">
+      <Filter>003_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Stadium.h">
+      <Filter>003_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Goal.h">
+      <Filter>003_Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SoccerBall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shaders\BasicPixelShader.hlsl">
+      <Filter>001_Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\BasicVertexShader.hlsl">
+      <Filter>001_Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\OBJPixelShader.hlsl">
+      <Filter>001_Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\OBJVertexShader.hlsl">
+      <Filter>001_Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpritePixelShader.hlsl">
+      <Filter>001_Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteVertexShader.hlsl">
+      <Filter>001_Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Shaders\BasicShaderHeader.hlsli">
+      <Filter>001_Shader</Filter>
+    </None>
+    <None Include="Resources\Shaders\OBJShaderHeader.hlsli">
+      <Filter>001_Shader</Filter>
+    </None>
+    <None Include="Resources\Shaders\SpriteShaderHeader.hlsli">
+      <Filter>001_Shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>
