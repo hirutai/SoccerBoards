@@ -164,14 +164,14 @@
     <ClCompile Include="Base\WindowsApi.cpp" />
     <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="Game\FieldPlayer.cpp" />
+    <ClCompile Include="Game\Goal.cpp" />
     <ClCompile Include="Game\GoalKeaper.cpp" />
+    <ClCompile Include="Game\SoccerBall.cpp" />
     <ClCompile Include="Game\Stadium.cpp" />
-    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Scene\BaseGame.cpp" />
     <ClCompile Include="Scene\SoccerBoards.cpp" />
     <ClCompile Include="Scene\main.cpp" />
-    <ClCompile Include="SoccerBall.cpp" />
     <ClCompile Include="Sound\SoundManager.cpp" />
     <ClCompile Include="Texture\TextureManager.cpp" />
   </ItemGroup>

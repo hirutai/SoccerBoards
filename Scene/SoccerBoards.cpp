@@ -1,6 +1,7 @@
 #include "SoccerBoards.h"
 #include "Stadium.h"
 #include "Goal.h"
+#include "SoccerBall.h"
 
 using namespace std;
 using namespace DirectX;
@@ -12,7 +13,7 @@ void SoccerBoards::Initialize()
 
 #pragma region テクスチャ読み込み
 	textureManager->LoadTexture(DebugFont, L"Resources/debugfont.png");
-	textureManager->LoadTexture(SoccerBall, L"Resources/Sprite/soccerball.png");
+	textureManager->LoadTexture(SOCCERBALL, L"Resources/Sprite/soccerball.png");
 	textureManager->LoadTexture(MyPlayer, L"Resources/Sprite/red.png");
 	textureManager->LoadTexture(CpuPlayer, L"Resources/Sprite/blue.png");
 	textureManager->LoadTexture(Pitch, L"Resources/Sprite/pitch.png");
@@ -79,8 +80,8 @@ void SoccerBoards::Initialize()
 
 #pragma region 3Dモデル生成
 	// ボール
-	mBall = make_unique<Obj3dModel>();
-	mBall->Initialize("ball", SoccerBall);
+	//mBall = make_unique<Obj3dModel>();
+	//mBall->Initialize("ball", SOCCERBALL);
 
 	// 味方フィールドプレイヤー
 	modelMyBody = make_unique<Obj3dModel>();
@@ -97,25 +98,13 @@ void SoccerBoards::Initialize()
 	// 相手ゴールキーパー
 	modelCpuKeaper = make_unique<Obj3dModel>();
 	modelCpuKeaper->Initialize("player", CpuPlayer);
-
-	// スタジアム
-	stadium = new Stadium();
-	stadium->Initialize(Pitch, Wall); // 初期化
-
-	// 味方ゴール
-	myGoal = new Goal();
-	myGoal->Initialzie("myGoal", Net); // 初期化
-
-	// 相手ゴール
-	cpuGoal = new Goal();
-	cpuGoal->Initialzie("cpuGoal", Net); // 初期化
 #pragma endregion
 
 #pragma region 3Dオブジェクト生成
 	// ボール
-	oBall = make_unique <Obj3dObject>();
-	oBall->Initialize(mBall.get());
-	oBall->SetScale({ objectSize, objectSize, objectSize });
+	//oBall = make_unique <Obj3dObject>();
+	//oBall->Initialize(mBall.get());
+	//oBall->SetScale({ objectSize, objectSize, objectSize });
 
 	for (int i = 0; i < PLAYERNUM; i++)
 	{
@@ -139,6 +128,24 @@ void SoccerBoards::Initialize()
 	objectCpuKeaper = make_unique<Obj3dObject>();
 	objectCpuKeaper->Initialize(modelCpuKeaper.get());
 	objectCpuKeaper->SetScale({ objectSize, objectSize, objectSize });
+#pragma endregion
+
+#pragma region ゲームオブジェクトの初期化
+	// スタジアム
+	stadium = new Stadium();
+	stadium->Initialize(Pitch, Wall); // 初期化
+
+	// 味方ゴール
+	myGoal = new Goal();
+	myGoal->Initialzie("myGoal", Net); // 初期化
+
+	// 相手ゴール
+	cpuGoal = new Goal();
+	cpuGoal->Initialzie("cpuGoal", Net); // 初期化
+
+	// サッカーボール
+	soccerBall = make_unique <SoccerBall>();
+	soccerBall->Initialize("ball", SOCCERBALL); // 初期化
 #pragma endregion
 
 #pragma region その他初期化
@@ -237,6 +244,8 @@ void SoccerBoards::Update()
 	case Scene::Game: // ゲーム
 
 		ObjectUpdate();
+
+		XMFLOAT3 ballPos = soccerBall->GetPosition();
 
 		if (ballPos.x > cpuGoalPos.x) // 相手ゴールにボールが入った時
 		{
@@ -379,7 +388,7 @@ void SoccerBoards::Draw()
 	objectCpuKeaper->Draw(cmdList);
 
 	// ボール
-	oBall->Draw(cmdList);
+	soccerBall->Draw(cmdList);
 #pragma endregion
 
 #pragma region スプライト描画
@@ -997,18 +1006,19 @@ void SoccerBoards::PhysicsUpdate()
 
 		// 描画オブジェクト関連
 		// 座標のセット
-		btVector3 physicsPos = trans.getOrigin();
-		SetPosition(ballPos, physicsPos);
+		btVector3 transPos = trans.getOrigin();
+		XMFLOAT3 physicsPos = XMFLOAT3(transPos.getX(), transPos.getY(), transPos.getZ());
+		soccerBall->SetPosition(physicsPos);
 
 		// 角度のセット
-		btQuaternion rot = trans.getRotation();
+		btQuaternion transRot = trans.getRotation();
 
 		btScalar rollX, pitchY, yawZ;
-		rot.getEulerZYX(yawZ, pitchY, rollX);
+		transRot.getEulerZYX(yawZ, pitchY, rollX);
 
-		btVector3 physicsRot = btVector3(XMConvertToDegrees((float)rollX), XMConvertToDegrees((float)pitchY), XMConvertToDegrees((float)yawZ));
-
-		SetRotation(ballAng, physicsRot);
+		btVector3 convertRot = btVector3(XMConvertToDegrees((float)rollX), XMConvertToDegrees((float)pitchY), XMConvertToDegrees((float)yawZ));
+		XMFLOAT3 physicsRot = XMFLOAT3(convertRot.getX(), convertRot.getY(), convertRot.getZ());
+		soccerBall->SetAngle(physicsRot);
 	}
 	#pragma endregion
 
@@ -1637,10 +1647,7 @@ void SoccerBoards::ObjectUpdate()
 #pragma endregion
 
 #pragma region ボールの更新
-	oBall->SetPosition(ballPos);
-	oBall->SetRotation(ballAng);
-
-	oBall->Update(true);
+	soccerBall->Update();
 #pragma endregion
 
 #pragma region スコアの更新

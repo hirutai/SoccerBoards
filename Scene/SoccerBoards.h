@@ -6,13 +6,14 @@
 
 class Stadium; // スタジアムクラス
 class Goal; // ゴールクラス
+class SoccerBall; // サッカーボールクラス
 
 #pragma region テクスチャ番号
 enum texnumber
 {
 	DebugFont,
 	// オブジェクトの色用
-	SoccerBall, // ボールの色
+	SOCCERBALL, // ボールの色
 	MyPlayer, // 味方選手の色
 	CpuPlayer, // 相手選手の色
 	Pitch, // ピッチの色
@@ -97,12 +98,7 @@ private: // メンバ
 
 #pragma region サッカーボール
 private: // メンバ
-	// 描画用
-	std::unique_ptr<Obj3dModel> mBall; // モデル
-	std::unique_ptr<Obj3dObject> oBall; // オブジェクト
-
-	XMFLOAT3 ballPos{}; // 座標
-	XMFLOAT3 ballAng{}; // 角度
+	unique_ptr<SoccerBall> soccerBall;
 
 	// 物理用
 	btVector3 ballStartPos{ 0, 20, 0 }; // ボールの初期座標

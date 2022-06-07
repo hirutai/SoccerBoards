@@ -84,10 +84,12 @@
     <ClCompile Include="Game\Stadium.cpp">
       <Filter>003_Game</Filter>
     </ClCompile>
-    <ClCompile Include="Goal.cpp">
+    <ClCompile Include="Game\SoccerBall.cpp">
       <Filter>003_Game</Filter>
     </ClCompile>
-    <ClCompile Include="SoccerBall.cpp" />
+    <ClCompile Include="Game\Goal.cpp">
+      <Filter>003_Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2D\Sprite.h">
@@ -138,7 +140,9 @@
     <ClInclude Include="Game\Goal.h">
       <Filter>003_Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\SoccerBall.h" />
+    <ClInclude Include="Game\SoccerBall.h">
+      <Filter>003_Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\BasicPixelShader.hlsl">
