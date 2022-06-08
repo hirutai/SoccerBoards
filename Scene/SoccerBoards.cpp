@@ -79,10 +79,6 @@ void SoccerBoards::Initialize()
 #pragma endregion
 
 #pragma region 3Dモデル生成
-	// ボール
-	//mBall = make_unique<Obj3dModel>();
-	//mBall->Initialize("ball", SOCCERBALL);
-
 	// 味方フィールドプレイヤー
 	modelMyBody = make_unique<Obj3dModel>();
 	modelMyBody->Initialize("player", MyPlayer);
@@ -101,11 +97,6 @@ void SoccerBoards::Initialize()
 #pragma endregion
 
 #pragma region 3Dオブジェクト生成
-	// ボール
-	//oBall = make_unique <Obj3dObject>();
-	//oBall->Initialize(mBall.get());
-	//oBall->SetScale({ objectSize, objectSize, objectSize });
-
 	for (int i = 0; i < PLAYERNUM; i++)
 	{
 		// 味方フィールドプレイヤー（体）
@@ -144,7 +135,7 @@ void SoccerBoards::Initialize()
 	cpuGoal->Initialzie("cpuGoal", Net); // 初期化
 
 	// サッカーボール
-	soccerBall = make_unique <SoccerBall>();
+	soccerBall = new SoccerBall();
 	soccerBall->Initialize("ball", SOCCERBALL); // 初期化
 #pragma endregion
 

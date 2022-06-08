@@ -98,7 +98,7 @@ private: // メンバ
 
 #pragma region サッカーボール
 private: // メンバ
-	unique_ptr<SoccerBall> soccerBall;
+	SoccerBall* soccerBall = nullptr;
 
 	// 物理用
 	btVector3 ballStartPos{ 0, 20, 0 }; // ボールの初期座標
