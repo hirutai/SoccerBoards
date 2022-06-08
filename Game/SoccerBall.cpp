@@ -37,5 +37,4 @@ void SoccerBall::ObjectInit()
 {
 	object = make_unique<Obj3dObject>();
 	object->Initialize(model.get());
-	//object->Update();
 }
