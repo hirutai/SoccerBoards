@@ -33,7 +33,7 @@ public:
 	// XV
 	void Update();
 	// •`‰æ
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 #pragma endregion
 
 #pragma region ƒƒ“ƒoŠÖ”

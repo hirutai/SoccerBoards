@@ -29,7 +29,7 @@ public:
 	// XV
 	void Update();
 	// •`‰æ
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 
 	// À•W‚Ìİ’è
 	void SetPosition(const XMFLOAT3& physicsPosition) { position = physicsPosition; }

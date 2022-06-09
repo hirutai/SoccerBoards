@@ -170,8 +170,11 @@
     <ClCompile Include="Game\Stadium.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Scene\BaseGame.cpp" />
+    <ClCompile Include="Scene\GamePlay.cpp" />
+    <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\SoccerBoards.cpp" />
     <ClCompile Include="Scene\main.cpp" />
+    <ClCompile Include="Scene\Title.cpp" />
     <ClCompile Include="Sound\SoundManager.cpp" />
     <ClCompile Include="Texture\TextureManager.cpp" />
   </ItemGroup>
@@ -190,7 +193,11 @@
     <ClInclude Include="Game\Stadium.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Scene\BaseGame.h" />
+    <ClInclude Include="Scene\BaseScene.h" />
+    <ClInclude Include="Scene\GamePlay.h" />
+    <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\SoccerBoards.h" />
+    <ClInclude Include="Scene\Title.h" />
     <ClInclude Include="Sound\SoundManager.h" />
     <ClInclude Include="Texture\TextureManager.h" />
   </ItemGroup>

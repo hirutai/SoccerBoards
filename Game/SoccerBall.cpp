@@ -22,9 +22,9 @@ void SoccerBall::Update()
 	object->Update(true);
 }
 
-void SoccerBall::Draw(ID3D12GraphicsCommandList* cmdList)
+void SoccerBall::Draw()
 {
-	object->Draw(cmdList);
+	object->Draw();
 }
 
 void SoccerBall::ModelInit(const std::string& modelName, const UINT& netTexNum)

@@ -23,10 +23,10 @@ void Goal::Update()
 #pragma endregion
 }
 
-void Goal::Draw(ID3D12GraphicsCommandList* cmdList)
+void Goal::Draw()
 {
 #pragma region •`‰æ
-	objectGoal->Draw(cmdList);
+	objectGoal->Draw();
 #pragma endregion
 }
 

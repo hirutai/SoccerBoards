@@ -32,13 +32,13 @@ void Stadium::Update()
 #pragma endregion
 }
 
-void Stadium::Draw(ID3D12GraphicsCommandList* cmdList)
+void Stadium::Draw()
 {
 #pragma region •`‰æ
 	// ƒsƒbƒ`
-	objectPitch->Draw(cmdList);
+	objectPitch->Draw();
 	// •Ç
-	objectWall->Draw(cmdList);
+	objectWall->Draw();
 #pragma endregion
 }
 
