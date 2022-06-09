@@ -3,6 +3,8 @@
 #include "TextureManager.h"
 #include "Camera.h"
 #include "Stadium.h"
+#include "Goal.h"
+#include "SoccerBall.h"
 
 using namespace std;
 using namespace DirectX;
@@ -13,7 +15,7 @@ void GamePlay::Initialize()
 	TextureManager* texManager = TextureManager::GetInstance();
 
 	texManager->LoadTexture(DebugFont, L"Resources/debugfont.png");
-	texManager->LoadTexture(SoccerBall, L"Resources/Sprite/soccerball.png");
+	texManager->LoadTexture(SOCCERBALL, L"Resources/Sprite/soccerball.png");
 	texManager->LoadTexture(MyPlayer, L"Resources/Sprite/red.png");
 	texManager->LoadTexture(CpuPlayer, L"Resources/Sprite/blue.png");
 	texManager->LoadTexture(Pitch, L"Resources/Sprite/pitch.png");
@@ -22,7 +24,7 @@ void GamePlay::Initialize()
 	texManager->LoadTexture(BackGround, L"Resources/Sprite/background.png");
 	texManager->LoadTexture(KickOff, L"Resources/Sprite/kickoff.png");
 	texManager->LoadTexture(Score, L"Resources/Sprite/score.png");
-	texManager->LoadTexture(Goal, L"Resources/Sprite/goal!.png");
+	texManager->LoadTexture(GOAL, L"Resources/Sprite/goal!.png");
 #pragma endregion
 
 #pragma region スプライト生成
@@ -49,7 +51,7 @@ void GamePlay::Initialize()
 
 	// ゴール画像
 	goalCha = make_unique<Sprite>();
-	goalCha->Initialize(Goal);
+	goalCha->Initialize(GOAL);
 	goalCha->SetAnchorPoint(vertCenter); // 頂点を中心に設定
 	goalCha->SetPosition(screenCenter.x, screenCenter.y); // 画面中央に配置
 	goalCha->SetSize(goalChaSize.x, goalChaSize.y);
@@ -60,10 +62,6 @@ void GamePlay::Initialize()
 #pragma endregion
 
 #pragma region 3Dモデル生成
-	// ボール
-	mBall = make_unique<Obj3dModel>();
-	mBall->Initialize("ball", SoccerBall);
-
 	// 味方フィールドプレイヤー
 	modelMyBody = make_unique<Obj3dModel>();
 	modelMyBody->Initialize("player", MyPlayer);
@@ -79,56 +77,44 @@ void GamePlay::Initialize()
 	// 相手ゴールキーパー
 	modelCpuKeaper = make_unique<Obj3dModel>();
 	modelCpuKeaper->Initialize("player", CpuPlayer);
-
-	// 味方ゴールネット
-	mMyGoal = make_unique< Obj3dModel>();
-	mMyGoal->Initialize("myGoal", Net);
-
-	// 相手ゴールネット
-	mCpuGoal = make_unique< Obj3dModel>();
-	mCpuGoal->Initialize("cpuGoal", Net);
 #pragma endregion
 
 #pragma region 3Dオブジェクト生成
-	// ボール
-	oBall = make_unique <Obj3dObject>();
-	oBall->Initialize(mBall.get());
-	oBall->SetScale({ objectSize, objectSize, objectSize });
-
 	for (int i = 0; i < PLAYERNUM; i++)
 	{
 		// 味方フィールドプレイヤー（体）
 		objectMyBody[i] = make_unique<Obj3dObject>();
 		objectMyBody[i]->Initialize(modelMyBody.get());
-		objectMyBody[i]->SetScale({ objectSize, objectSize, objectSize });
 
 		// 相手フィールドプレイヤー（体）
 		objectCpuBody[i] = make_unique<Obj3dObject>();
 		objectCpuBody[i]->Initialize(modelCpuBody.get());
-		objectCpuBody[i]->SetScale({ objectSize, objectSize, objectSize });
 	}
 
 	// 味方ゴールキーパー
 	objectMyKeaper = make_unique<Obj3dObject>();
 	objectMyKeaper->Initialize(modelMyKeaper.get());
-	objectMyKeaper->SetScale({ objectSize, objectSize, objectSize });
 
 	// 相手ゴールキーパー
 	objectCpuKeaper = make_unique<Obj3dObject>();
 	objectCpuKeaper->Initialize(modelCpuKeaper.get());
-	objectCpuKeaper->SetScale({ objectSize, objectSize, objectSize });
-
-	// 味方ゴール
-	oMyGoal = make_unique<Obj3dObject>();
-	oMyGoal->Initialize(mMyGoal.get());
-	// 相手ゴール
-	oCpuGoal = make_unique<Obj3dObject>();
-	oCpuGoal->Initialize(mCpuGoal.get());
 #pragma endregion
 
 	// スタジアム
 	stadium = new Stadium();
 	stadium->Initialize(Pitch, Wall); // 初期化
+
+	// 味方ゴール
+	myGoal = new Goal();
+	myGoal->Initialzie("mygoal", Net);
+
+	// 相手ゴール
+	cpuGoal = new Goal();
+	cpuGoal->Initialzie("cpugoal", Net);
+
+	// サッカーボール
+	soccerBall = new SoccerBall();
+	soccerBall->Initialize("ball", SOCCERBALL);
 
 #pragma region その他初期化
 	// 物理世界の初期化
@@ -207,6 +193,8 @@ void GamePlay::Update()
 	case Scene::Game: // ゲーム
 
 		ObjectUpdate();
+
+		XMFLOAT3 ballPos = soccerBall->GetPosition();
 
 		if (ballPos.x > cpuGoalPos.x) // 相手ゴールにボールが入った時
 		{
@@ -300,12 +288,12 @@ void GamePlay::DrawObject()
 {
 #pragma region 3Dオブジェクト描画
 	// スタジアム
-	stadium->Draw(); // 描画
+	stadium->Draw();
 
 	// 味方ゴール
-	oMyGoal->Draw();
+	myGoal->Draw();
 	// 相手ゴール
-	oCpuGoal->Draw();
+	cpuGoal->Draw();
 
 	// 味方フィールドプレイヤー
 	for (int i = 0; i < PLAYERNUM; i++)
@@ -327,7 +315,7 @@ void GamePlay::DrawObject()
 	objectCpuKeaper->Draw();
 
 	// ボール
-	oBall->Draw();
+	soccerBall->Draw();
 #pragma endregion
 }
 
@@ -368,6 +356,7 @@ void GamePlay::DrawFrontSprite()
 
 void GamePlay::Finalize()
 {
+#pragma region 物理関連の解放
 	// 剛体の削除
 	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
@@ -406,6 +395,7 @@ void GamePlay::Finalize()
 
 	// 衝突構成の削除
 	delete collisionConfiguration;
+#pragma endregion
 
 	// スタジアムの削除
 	delete stadium;
@@ -787,7 +777,7 @@ void GamePlay::CreateCpuPlayer()
 		// 体
 		{
 			// 衝突形状の設定
-			cShapeCpuBody[i] = new btCapsuleShape(btScalar(bodySize.x) * objectSize, btScalar(bodySize.y) * objectSize);
+			cShapeCpuBody[i] = new btCapsuleShape(btScalar(bodySize.x), btScalar(bodySize.y));
 			// 衝突形状配列に追加
 			collisionShapes.push_back(cShapeCpuBody[i]);
 
@@ -869,7 +859,7 @@ void GamePlay::CreateCpuPlayer()
 void GamePlay::CreateCpuKeaper()
 {
 	// 衝突形状の設定
-	cShapeCpuKeaper = new btCapsuleShape(btScalar(bodySize.x) * objectSize, btScalar(bodySize.y) * objectSize);
+	cShapeCpuKeaper = new btCapsuleShape(btScalar(bodySize.x), btScalar(bodySize.y));
 	// 衝突形状配列に追加
 	collisionShapes.push_back(cShapeCpuKeaper);
 
@@ -926,21 +916,25 @@ void GamePlay::PhysicsUpdate()
 			trans = rBodyBall->getWorldTransform();
 		}
 
-
 		// 描画オブジェクト関連
-		// 座標のセット
-		btVector3 physicsPos = trans.getOrigin();
-		SetPosition(ballPos, physicsPos);
+		// ボールの座標の取得
+		btVector3 transPos = trans.getOrigin();
+		// XMFLOAT3型に変換
+		XMFLOAT3 physicsPos = { transPos.getX(), transPos.getY(), transPos.getZ() };
+		// 座標の設定
+		soccerBall->SetPosition(physicsPos);
 
-		// 角度のセット
-		btQuaternion rot = trans.getRotation();
-
+		// 回転量の取得
+		btQuaternion transRot = trans.getRotation();
+		// オイラー角の取得
 		btScalar rollX, pitchY, yawZ;
-		rot.getEulerZYX(yawZ, pitchY, rollX);
-
-		btVector3 physicsRot = btVector3(XMConvertToDegrees((float)rollX), XMConvertToDegrees((float)pitchY), XMConvertToDegrees((float)yawZ));
-
-		SetRotation(ballAng, physicsRot);
+		transRot.getEulerZYX(yawZ, pitchY, rollX);
+		// 度に変換
+		btVector3 convertRot = btVector3(XMConvertToDegrees((float)rollX), XMConvertToDegrees((float)pitchY), XMConvertToDegrees((float)yawZ));
+		// XMFLOAT3型に変換
+		XMFLOAT3 physicsRot = { convertRot.getX(), convertRot.getY(), convertRot.getZ() };
+		// 角度の設定
+		soccerBall->SetAngle(physicsRot);
 	}
 #pragma endregion
 
@@ -1571,10 +1565,7 @@ void GamePlay::ObjectUpdate()
 #pragma endregion
 
 #pragma region ボールの更新
-	oBall->SetPosition(ballPos);
-	oBall->SetRotation(ballAng);
-
-	oBall->Update(true);
+	soccerBall->Update();
 #pragma endregion
 
 #pragma region スコアの更新
@@ -1591,9 +1582,9 @@ void GamePlay::ObjectUpdate()
 	stadium->Update();
 
 	// 味方ゴール
-	oMyGoal->Update();
+	myGoal->Update();
 	// 相手ゴール
-	oCpuGoal->Update();
+	cpuGoal->Update();
 #pragma endregion
 }
 

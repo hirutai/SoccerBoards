@@ -15,12 +15,16 @@
 // 前方宣言
 class Stadium; // スタジアムクラス
 
+class Goal; // ゴールクラス
+
+class SoccerBall; // サッカーボール
+
 #pragma region テクスチャ番号
 enum texnumber
 {
 	DebugFont,
 	// オブジェクトの色用
-	SoccerBall, // ボールの色
+	SOCCERBALL, // ボールの色
 	MyPlayer, // 味方選手の色
 	CpuPlayer, // 相手選手の色
 	Pitch, // ピッチの色
@@ -32,7 +36,7 @@ enum texnumber
 	Operation, // 操作
 	KickOff, // キックオフ
 	Score, // スコア
-	Goal, // ゴール！
+	GOAL, // ゴール！
 	Result, // 試合結果
 };
 #pragma endregion
@@ -40,7 +44,6 @@ enum texnumber
 #pragma region シーン番号
 enum class Scene
 {
-	Explanation, // 操作説明
 	CameraRotate, // カメラの回転
 	KickOffDirecting, // キックオフ時の演出
 	Game, // ゲーム
@@ -49,7 +52,6 @@ enum class Scene
 	CpuGoal, // 相手ゴール時
 	CpuGoalDirecting, // 相手ゴール時の演出
 	ResetStatus, // ゲーム中のリセット
-	Result, // 結果
 };
 #pragma endregion
 
@@ -103,7 +105,6 @@ public:
 
 #pragma region オブジェクト全体設定
 private: // メンバ
-	const float objectSize = 1.0f; // オブジェクトサイズの倍率
 	const float BodyHeight = 3.5f; // ピッチの高さを０とした時のオブジェクトの高さ
 	const float footHeight = 1.5f; // 　　　　　　〃　　　　　　足の高さ
 #pragma endregion
@@ -115,18 +116,12 @@ private: // メンバ
 #pragma endregion
 
 #pragma region スプライト 初期座標指定用
-	XMFLOAT2 screenUpCenter{ WindowsApi::windowWidth / 2, 50.0f }; // 画面上中央
 	XMFLOAT2 screenCenter{ WindowsApi::windowWidth / 2, WindowsApi::windowHeight / 2 }; // 画面中央
 #pragma endregion
 
 #pragma region サッカーボール
 private: // メンバ
-	// 描画用
-	unique_ptr<Obj3dModel> mBall; // モデル
-	unique_ptr<Obj3dObject> oBall; // オブジェクト
-
-	XMFLOAT3 ballPos{}; // 座標
-	XMFLOAT3 ballAng{}; // 角度
+	SoccerBall* soccerBall = nullptr; // サッカーボール
 
 	// 物理用
 	btVector3 ballStartPos{ 0, 20, 0 }; // ボールの初期座標
@@ -318,9 +313,7 @@ private: // メンバ
 #pragma endregion
 
 #pragma region ゴール
-	// 味方ゴールの描画用
-	unique_ptr<Obj3dModel> mMyGoal; // モデル
-	unique_ptr<Obj3dObject> oMyGoal; // オブジェクト
+	Goal* myGoal = nullptr; // 味方ゴール
 
 	// 味方ゴールの物理用
 	btCollisionShape* cShapeMyGoal = nullptr; // 衝突形状
@@ -328,9 +321,7 @@ private: // メンバ
 
 	XMFLOAT3 myGoalPos{ -20.0f, 0.0f, 0.0f }; // 座標
 
-	// 相手ゴールの描画用
-	unique_ptr<Obj3dModel> mCpuGoal; // モデル
-	unique_ptr<Obj3dObject> oCpuGoal; // オブジェクト
+	Goal* cpuGoal = nullptr; // 相手ゴール
 
 	// 相手ゴールの物理用
 	btCollisionShape* cShapeCpuGoal = nullptr; // 衝突形状
@@ -452,6 +443,6 @@ private:
 	// 相手のゴール
 	void CpuGoal();
 
-	Scene scene = Scene::CameraRotate; // シーン管理
+	Scene scene = Scene::CameraRotate; // ゲームシーン内のシーン管理
 #pragma endregion
 };
