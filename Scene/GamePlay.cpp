@@ -132,11 +132,9 @@ void GamePlay::Initialize()
 	// 味方ゴール
 	oMyGoal = make_unique<Obj3dObject>();
 	oMyGoal->Initialize(mMyGoal.get());
-	oMyGoal->Update();
 	// 相手ゴール
 	oCpuGoal = make_unique<Obj3dObject>();
 	oCpuGoal->Initialize(mCpuGoal.get());
-	oCpuGoal->Update();
 #pragma endregion
 
 	// スタジアム
@@ -173,14 +171,6 @@ void GamePlay::Update()
 
 	switch (scene)
 	{
-	case Scene::Title: // タイトル
-		if (input->TriggerKey(DIK_SPACE)) // スペースキーを押す
-		{
-			// タイトルから操作説明へ
-			scene = Scene::Explanation;
-		}
-
-		break;
 	case Scene::Explanation: // 操作説明
 		if (input->TriggerKey(DIK_SPACE)) // スペースキーを押す
 		{
@@ -330,7 +320,7 @@ void GamePlay::Update()
 		{
 			ResetGame(); // ゲームの初期化
 			// ゲームから　タイトルへ
-			scene = Scene::Title;
+			scene = Scene::Explanation;
 		}
 
 		break;
@@ -389,9 +379,6 @@ void GamePlay::DrawFrontSprite()
 
 	switch (scene)
 	{
-	case Scene::Title:
-
-		break;
 	case Scene::Explanation:
 		ex->Draw();
 

@@ -41,7 +41,6 @@ enum texnumber
 #pragma region シーン番号
 enum class Scene
 {
-	Title, // タイトル
 	Explanation, // 操作説明
 	CameraRotate, // カメラの回転
 	KickOffDirecting, // キックオフ時の演出
@@ -462,6 +461,6 @@ private:
 	// 相手のゴール
 	void CpuGoal();
 
-	Scene scene = Scene::Title; // シーン管理
+	Scene scene = Scene::Explanation; // シーン管理
 #pragma endregion
 };

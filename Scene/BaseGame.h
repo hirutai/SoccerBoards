@@ -1,4 +1,5 @@
-#pragma once 
+#pragma once
+
 #include "WindowsApi.h"
 #include "DirectXInitialize.h"
 #include "Input.h"
@@ -9,8 +10,7 @@
 #include "Obj3dObject.h"
 #include "Sprite.h"
 #include "DebugText.h"
-
-#include <memory>
+#include "SceneManager.h"
 
 /// <summary>
 /// ゲームの基盤
@@ -20,7 +20,7 @@ class BaseGame
 #pragma region エイリアス
 protected:
 	// std::を省略
-	//template <class T> using unique_ptr = std::unique_ptr<T>;
+	template <class T> using unique_ptr = std::unique_ptr<T>;
 	// DirectX::を省略
 	using XMFLOAT2 = DirectX::XMFLOAT2;
 	using XMFLOAT3 = DirectX::XMFLOAT3;
@@ -47,7 +47,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	virtual void Draw() = 0;
+	virtual void Draw();
 
 	/// <summary>
 	/// 解放
@@ -59,14 +59,15 @@ public:
 protected:
 	bool endFlag = false; // 継続フラグ
 
-	std::unique_ptr<WindowsApi> winApi; // ウィンドウ
-	std::unique_ptr<DirectXInitialize> dxInit; // DirectX初期化
-	std::unique_ptr<Input> input; // 入力機能
+	unique_ptr<WindowsApi> winApi; // ウィンドウ
+	unique_ptr<DirectXInitialize> dxInit; // DirectX初期化
 
-	std::unique_ptr<SoundManager> soundManager; // サウンドマネージャ
-	std::unique_ptr<TextureManager> textureManager; // テクスチャマネージャ
-	std::unique_ptr<Camera> camera; // カメラ
+	Camera* camera; // カメラ
+	Input* input; // 入力機能
+	TextureManager* textureManager; // テクスチャマネージャ
+	unique_ptr<DebugText> debugText; // デバッグテキスト
+	unique_ptr<SoundManager> soundManager; // サウンドマネージャ
 
-	std::unique_ptr<DebugText> debugText; // デバッグテキスト
+	SceneManager* sceneManager = nullptr; // シーンマネージャー
 #pragma endregion
 };
