@@ -116,8 +116,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="cmdList">コマンドリスト</param>
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 #pragma endregion
 
 #pragma region メンバ関数(public)

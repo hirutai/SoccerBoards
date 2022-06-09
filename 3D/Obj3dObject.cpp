@@ -140,25 +140,25 @@ void Obj3dObject::Update(bool physicsObjectFlag)
 	constBuffB1->Unmap(0, nullptr);
 }
 
-void Obj3dObject::Draw(ID3D12GraphicsCommandList* cmdList)
+void Obj3dObject::Draw()
 {
 #pragma region 共通描画コマンド
 	// パイプラインステートの設定
-	cmdList->SetPipelineState(common->pipelineState.Get());
+	common->dxInit->GetCommandList()->SetPipelineState(common->pipelineState.Get());
 	// ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(common->rootSignature.Get());
+	common->dxInit->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
 	// プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	common->dxInit->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 #pragma endregion
 
 #pragma region 個別描画コマンド
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	cmdList->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
+	common->dxInit->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
+	common->dxInit->GetCommandList()->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
 	assert(model); // モデルがnullだったら警告
 
 	// モデル描画
-	model->Draw(cmdList);
+	model->Draw(common->dxInit->GetCommandList());
 #pragma endregion
 }
 
@@ -248,7 +248,7 @@ void Obj3dObject::Common::InitializeGraphicsPipeline(DirectXInitialize* dxInit)
 	gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
 
 	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);   //一旦標準値をセット
-	gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK; 
+	gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 	gpipeline.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);   //一旦標準値をセット
 	gpipeline.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;   //隠れているものは描画しない
 
