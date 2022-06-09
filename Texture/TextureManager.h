@@ -11,6 +11,20 @@
 /// </summary>
 class TextureManager
 {
+#pragma region 静的メンバ関数
+public:
+	// インスタンスの取得
+	static TextureManager* GetInstance();
+	// 静的初期化
+	static void StaticInitialize(DirectXInitialize* DxInit);
+#pragma endregion
+
+#pragma region 静的メンバ変数
+public:
+	// DirectX初期化
+	static DirectXInitialize* dxInit;
+#pragma endregion
+
 #pragma region エイリアス
 private:
 	// Microsoft::WRL::を省略
@@ -27,8 +41,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="dxInit">DirectX初期化</param>
-	void Initialize(DirectXInitialize* dxInit);
+	void Initialize();
 
 	/// <summary>
 	/// テクスチャ読み込み
@@ -64,7 +77,7 @@ public:
 
 #pragma region メンバ変数
 private:
-	DirectXInitialize* dxInit = nullptr; // DirectX初期化
+	//DirectXInitialize* dxInit = nullptr; // DirectX初期化
 
 	ComPtr<ID3D12DescriptorHeap> descHeap; // デスクリプタヒープ
 	ComPtr<ID3D12Resource> textureBuff[maxTextureNumber]; // テクスチャバッファ

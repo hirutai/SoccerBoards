@@ -1,4 +1,6 @@
 #include "Obj3dModel.h"
+#include "TextureManager.h"
+
 #include <cassert>
 #include <fstream>
 #include <sstream>
@@ -7,12 +9,10 @@ using namespace std;
 using namespace DirectX;
 
 ID3D12Device* Obj3dModel::device = nullptr;
-TextureManager* Obj3dModel::textureManager = nullptr;
 
-void Obj3dModel::StaticInitialize(ID3D12Device* device, TextureManager* textureManager)
+void Obj3dModel::StaticInitialize(ID3D12Device* device)
 {
 	Obj3dModel::device = device;
-	Obj3dModel::textureManager = textureManager;
 }
 
 void Obj3dModel::Initialize(const std::string& modelName, UINT texNumber)
@@ -182,16 +182,18 @@ void Obj3dModel::Initialize(const std::string& modelName, UINT texNumber)
 
 void Obj3dModel::Draw(ID3D12GraphicsCommandList* cmdList)
 {
+	TextureManager* texManager = TextureManager::GetInstance();
+
 	// 頂点バッファの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
 	// インデックスバッファの設定
 	cmdList->IASetIndexBuffer(&ibView);
 
 	// デスクリプタヒープ配列
-	textureManager->SetDescriptorHeaps(cmdList);
+	texManager->SetDescriptorHeaps(cmdList);
 
 	// シェーダリソースビューのセット
-	textureManager->SetShaderResourcesView(cmdList, 2, texNumber);
+	texManager->SetShaderResourcesView(cmdList, 2, texNumber);
 
 	// 描画コマンドの設定
 	cmdList->DrawIndexedInstanced((UINT)indices.size(), 1, 0, 0, 0);

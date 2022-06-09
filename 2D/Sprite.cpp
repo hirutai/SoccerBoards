@@ -1,4 +1,5 @@
 #include "Sprite.h" 
+#include "TextureManager.h"
 
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
@@ -7,11 +8,10 @@ using namespace DirectX;
 
 Sprite::Common* Sprite::common = nullptr;
 
-void Sprite::StaticInitialize(DirectXInitialize* dxInit, TextureManager* textureManager)
+void Sprite::StaticInitialize(DirectXInitialize* dxInit)
 {
 	common = new Common();
 	common->dxInit = dxInit;
-	common->textureManager = textureManager;
 
 	// グラフィックスパイプライン生成
 	common->InitializeGraphicsPipeline();
@@ -23,27 +23,30 @@ void Sprite::StaticInitialize(DirectXInitialize* dxInit, TextureManager* texture
 void Sprite::StaticFinalize()
 {
 	delete common;
+	common = nullptr;
 }
 
-void Sprite::SetPipeline(ID3D12GraphicsCommandList* cmdList)
+void Sprite::SetPipeline()
 {
 	//パイプラインステートの設定
-	cmdList->SetPipelineState(common->pipelineState.Get());
+	common->dxInit->GetCommandList()->SetPipelineState(common->pipelineState.Get());
 	//ルートシグネチャの設定
-	cmdList->SetGraphicsRootSignature(common->rootSignature.Get());
+	common->dxInit->GetCommandList()->SetGraphicsRootSignature(common->rootSignature.Get());
 	//プリミティブ形状を設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	common->dxInit->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 void Sprite::Initialize(UINT texNumber)
 {
 	HRESULT result = S_FALSE;
 
+	TextureManager* texManager = TextureManager::GetInstance();
+
 	this->texNumber = texNumber;
 
-	if (common->textureManager->GetSpriteTexBuff(texNumber))
+	if (texManager->GetSpriteTexBuff(texNumber))
 	{
-		D3D12_RESOURCE_DESC resDesc = common->textureManager->GetSpriteTexBuff(texNumber)->GetDesc();
+		D3D12_RESOURCE_DESC resDesc = texManager->GetSpriteTexBuff(texNumber)->GetDesc();
 		width = (float)resDesc.Width;
 		height = (float)resDesc.Height;
 
@@ -77,7 +80,7 @@ void Sprite::Initialize(UINT texNumber)
 			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 			D3D12_HEAP_FLAG_NONE,
 			&CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff),
-			D3D12_RESOURCE_STATE_GENERIC_READ, 
+			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
 			IID_PPV_ARGS(&constBuff)
 		);
@@ -95,8 +98,10 @@ void Sprite::Initialize(UINT texNumber)
 	}
 }
 
-void Sprite::Draw(ID3D12GraphicsCommandList* cmdList)
+void Sprite::Draw()
 {
+	TextureManager* texManager = TextureManager::GetInstance();
+
 	// ワールド行列の更新
 	matWorld = XMMatrixIdentity();
 	matWorld *= XMMatrixRotationZ(XMConvertToRadians(rotation));
@@ -109,23 +114,25 @@ void Sprite::Draw(ID3D12GraphicsCommandList* cmdList)
 	constMap->mat = matWorld * common->matProjection;
 	constBuff->Unmap(0, nullptr);
 
-	common->textureManager->SetDescriptorHeaps(cmdList);
+	texManager->SetDescriptorHeaps(common->dxInit->GetCommandList());
 
-	common->textureManager->SetShaderResourcesView(cmdList, 1, texNumber);
+	texManager->SetShaderResourcesView(common->dxInit->GetCommandList(), 1, texNumber);
 
 	//頂点バッファの設定
-	cmdList->IASetVertexBuffers(0, 1, &VBView);
+	common->dxInit->GetCommandList()->IASetVertexBuffers(0, 1, &VBView);
 
 	//定数バッファのセット
-	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+	common->dxInit->GetCommandList()->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 
 	//描画コマンド
-	cmdList->DrawInstanced(4, 1, 0, 0);
+	common->dxInit->GetCommandList()->DrawInstanced(4, 1, 0, 0);
 }
 
 void Sprite::TransferVertices()
 {
 	HRESULT result = S_FALSE;
+
+	TextureManager* texManager = TextureManager::GetInstance();
 
 	// 頂点データ
 	VertexPosUv vertices[] =
@@ -138,7 +145,9 @@ void Sprite::TransferVertices()
 
 	// 左下、左上、右下、右上
 	enum
-	{ LB, LT, RB, RT };
+	{
+		LB, LT, RB, RT
+	};
 
 	float left = (0.0f - anchorpoint.x) * width;
 	float right = (1.0f - anchorpoint.x) * width;
@@ -163,9 +172,9 @@ void Sprite::TransferVertices()
 	vertices[RT].pos = { right,	top,	0.0f }; // 右上
 
 	// テクスチャ情報取得
-	if (common->textureManager->GetSpriteTexBuff(texNumber))
+	if (texManager->GetSpriteTexBuff(texNumber))
 	{
-		D3D12_RESOURCE_DESC resDesc = common->textureManager->GetSpriteTexBuff(texNumber)->GetDesc();
+		D3D12_RESOURCE_DESC resDesc = texManager->GetSpriteTexBuff(texNumber)->GetDesc();
 
 		float tex_left = tex_x / resDesc.Width;
 		float tex_right = (tex_x + tex_width) / resDesc.Width;
@@ -244,7 +253,7 @@ void Sprite::Common::InitializeGraphicsPipeline()
 	ComPtr<ID3DBlob>errorBlob;
 
 	// 頂点シェーダの読み込みとコンパイル
-	result = 
+	result =
 		D3DCompileFromFile(
 			L"Resources/Shaders/SpriteVertexShader.hlsl", // シェーダファイル名
 			nullptr,
@@ -255,7 +264,7 @@ void Sprite::Common::InitializeGraphicsPipeline()
 			&vsBlob, &errorBlob
 		);
 
-	if (FAILED(result)) 
+	if (FAILED(result))
 	{
 		// errorBlob からエラー内容を string 型にコピー
 		std::string errstr;
@@ -270,7 +279,7 @@ void Sprite::Common::InitializeGraphicsPipeline()
 	}
 
 	// ピクセルシェーダの読み込みとコンパイル
-	result = 
+	result =
 		D3DCompileFromFile(
 			L"Resources/Shaders/SpritePixelShader.hlsl", // シェーダファイル名
 			nullptr,

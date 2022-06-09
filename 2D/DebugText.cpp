@@ -56,13 +56,13 @@ void DebugText::Print(const std::string& text, float x, float y, float scale = 1
 	}
 }
 
-void DebugText::DrawAll(ID3D12GraphicsCommandList* cmdList)
+void DebugText::DrawAll()
 {
 	// 全ての文字のスプライトについて
 	for (int i = 0; i < spriteIndex; i++)
 	{
 		// スプライト描画
-		sprites[i]->Draw(cmdList);
+		sprites[i]->Draw();
 	}
 
 	spriteIndex = 0;

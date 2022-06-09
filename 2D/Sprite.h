@@ -5,7 +5,9 @@
 #include <wrl.h>
 
 #include "DirectXInitialize.h"
-#include "TextureManager.h"
+
+// 前方宣言
+class TextureManager;
 
 /// <summary>
 /// スプライトクラス
@@ -36,9 +38,9 @@ private:
 		/// </summary>
 		void InitializeGraphicsPipeline();
 
-	private:
 		DirectXInitialize* dxInit = nullptr; // DirectX初期化
-		TextureManager* textureManager = nullptr; // テクスチャマネージャー
+	private:
+		//TextureManager* textureManager = nullptr; // テクスチャマネージャー
 		ComPtr<ID3D12RootSignature> rootSignature; // ルートシグネチャ
 		ComPtr<ID3D12PipelineState> pipelineState; // パイプラインステート
 		XMMATRIX matProjection{}; // 射影行列
@@ -68,8 +70,7 @@ public:
 	/// 静的メンバの初期化
 	/// </summary>
 	/// <param name="dxInit">DirectX初期化</param>
-	/// <param name="textureManager">テクスチャマネージャ</param>
-	static void StaticInitialize(DirectXInitialize* dxInit, TextureManager* textureManager);
+	static void StaticInitialize(DirectXInitialize* dxInit);
 
 	/// <summary>
 	/// 静的メンバの解放
@@ -80,12 +81,13 @@ public:
 	/// パイプラインの設定
 	/// </summary>
 	/// <param name="cmdList">コマンドリスト</param>
-	static void SetPipeline(ID3D12GraphicsCommandList* cmdList);
+	static void SetPipeline();
 #pragma endregion
 
 #pragma region 静的メンバ変数
 private:
 	static Common* common; // 共有データ
+
 #pragma endregion
 
 #pragma region メンバ関数
@@ -99,8 +101,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="cmdList">コマンドリスト</param>
-	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void Draw();
 
 	/// <summary>
 	/// 頂点バッファにデータ転送

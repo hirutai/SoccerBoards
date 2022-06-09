@@ -44,8 +44,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="cmdList">コマンドリスト</param>
-	void DrawAll(ID3D12GraphicsCommandList* cmdList);
+	void DrawAll();
 #pragma endregion
 
 #pragma region メンバ変数

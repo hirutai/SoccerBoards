@@ -8,7 +8,6 @@
 #include <string>
 
 #include "DirectXInitialize.h"
-#include "TextureManager.h"
 
 /// <summary>
 /// .objモデルクラス
@@ -72,21 +71,18 @@ public:
 
 #pragma region 静的メンバ関数
 public:
-	
+
 	/// <summary>
 	/// 静的初期化
 	/// </summary>
 	/// <param name="device">デバイス</param>
-	/// <param name="textureManager">テクスチャマネージャー</param>
-	static void StaticInitialize(ID3D12Device* device, TextureManager* textureManager);
+	static void StaticInitialize(ID3D12Device* device);
 #pragma endregion
 
 #pragma region 静的メンバ変数
 private:
 	// デバイス
 	static ID3D12Device* device;
-	// テクスチャマネージャー
-	static TextureManager* textureManager; // テクスチャマネージャー
 #pragma endregion
 
 #pragma region メンバ関数(public)
