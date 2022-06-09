@@ -40,5 +40,4 @@ void Goal::ObjectInit()
 {
 	objectGoal = make_unique<Obj3dObject>();
 	objectGoal->Initialize(modelGoal.get());
-	objectGoal->Update();
 }

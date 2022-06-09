@@ -52,5 +52,4 @@ void Stadium::ObjectInit(std::unique_ptr<Obj3dObject>& object, Obj3dModel* model
 {
 	object = make_unique<Obj3dObject>();
 	object->Initialize(model);
-	object->Update();
 }
