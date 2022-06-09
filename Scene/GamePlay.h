@@ -14,9 +14,7 @@
 
 // 前方宣言
 class Stadium; // スタジアムクラス
-
 class Goal; // ゴールクラス
-
 class SoccerBall; // サッカーボール
 
 #pragma region テクスチャ番号
@@ -125,6 +123,7 @@ private: // メンバ
 
 	// 物理用
 	btVector3 ballStartPos{ 0, 20, 0 }; // ボールの初期座標
+
 	const float ballRadius = 3.0f / 2; // ボールの半径
 	btCollisionShape* cShapeBall = nullptr; // 衝突形状
 	btRigidBody* rBodyBall = nullptr; // 剛体
@@ -210,7 +209,7 @@ private: // ゴールキーパー
 
 	btVector3 myKeaperVel{}; // 速度
 
-	btVector3 myKeaperStartPos{ -19, BodyHeight, 0 }; // ゴールキーパーの初期座標
+	btVector3 myKeaperStartPos{ -23, BodyHeight, 0 }; // ゴールキーパーの初期座標
 #pragma endregion
 
 #pragma region 相手選手
@@ -267,7 +266,7 @@ private: // ゴールキーパー
 
 	btVector3 cpuKeaperVel{}; // 移動量
 
-	btVector3 cpuKeaperStartPos{ 19, BodyHeight, 0 }; // 相手ゴールキーパーの初期座標
+	btVector3 cpuKeaperStartPos{ 23, BodyHeight, 0 }; // 相手ゴールキーパーの初期座標
 #pragma endregion
 
 	// AI用
@@ -285,7 +284,7 @@ private: // ゴールキーパー
 	Stadium* stadium = nullptr; // スタジアム
 
 private: // メンバ
-	const XMFLOAT3 pitchSize{ 40.0f / 2, 0.0f, 30.0f / 2 }; // ピッチのx 幅 / 2、 y 高さ / 2、 z 深さ / 2
+	const XMFLOAT3 pitchSize{ 48.0f / 2, 0.0f, 36.0f / 2 }; // ピッチのx 幅 / 2、 y 高さ / 2、 z 深さ / 2
 
 	// ピッチの物理用
 	btCollisionShape* cShapeGround = nullptr; // 衝突形状
@@ -293,7 +292,7 @@ private: // メンバ
 
 #define lrWALLNUM 2 // 左右壁の数
 
-	float lrWallHalf = 8.0f / 2; // 左右壁のZ軸の半分のサイズ
+	float lrWallHalf = 11.0f / 2; // 左右壁のZ軸の半分のサイズ
 
 	const XMFLOAT3 lrWallSize{ 0.1f / 2, 100.0f / 2, lrWallHalf }; // 左右壁のx 幅 / 2、 y 高さ / 2、 z 深さ / 2
 
@@ -305,7 +304,7 @@ private: // メンバ
 	btCollisionShape* cShapeRWall[2]; // 衝突形状
 	btRigidBody* rBodyRWall[2]; // 剛体
 
-	const XMFLOAT3 fbWallSize{ 40.0f / 2, 100.0f / 2, 0.1f / 2 }; // 前奥壁のx 幅 / 2, y 高さ / 2、 z 深さ / 2
+	const XMFLOAT3 fbWallSize{ 48.0f / 2, 100.0f / 2, 0.1f / 2 }; // 前奥壁のx 幅 / 2, y 高さ / 2、 z 深さ / 2
 
 	// 前奥壁の物理用
 	btCollisionShape* cShapeFBWall[2]; // 衝突形状
@@ -319,7 +318,7 @@ private: // メンバ
 	btCollisionShape* cShapeMyGoal = nullptr; // 衝突形状
 	btRigidBody* rBodyMyGoal = nullptr; // 剛体
 
-	XMFLOAT3 myGoalPos{ -20.0f, 0.0f, 0.0f }; // 座標
+	XMFLOAT3 myGoalPos{ -24.0f, 0.0f, 0.0f }; // 座標
 
 	Goal* cpuGoal = nullptr; // 相手ゴール
 
@@ -327,7 +326,7 @@ private: // メンバ
 	btCollisionShape* cShapeCpuGoal = nullptr; // 衝突形状
 	btRigidBody* rBodyCpuGoal = nullptr; // 剛体
 
-	XMFLOAT3 cpuGoalPos{ 20.0f, 0.0f, 0.0f }; // 座標
+	XMFLOAT3 cpuGoalPos{ 24.0f, 0.0f, 0.0f }; // 座標
 #pragma endregion
 
 #pragma region 背景画像
