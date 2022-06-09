@@ -99,6 +99,12 @@
     <ClCompile Include="Scene\Title.cpp">
       <Filter>002_Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\Operation.cpp">
+      <Filter>002_Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Result.cpp">
+      <Filter>002_Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2D\Sprite.h">
@@ -162,6 +168,12 @@
       <Filter>002_Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Title.h">
+      <Filter>002_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Operation.h">
+      <Filter>002_Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Result.h">
       <Filter>002_Scene</Filter>
     </ClInclude>
   </ItemGroup>

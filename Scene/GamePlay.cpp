@@ -9,9 +9,9 @@ using namespace DirectX;
 
 void GamePlay::Initialize()
 {
+#pragma region テクスチャ読み込み
 	TextureManager* texManager = TextureManager::GetInstance();
 
-#pragma region テクスチャ読み込み
 	texManager->LoadTexture(DebugFont, L"Resources/debugfont.png");
 	texManager->LoadTexture(SoccerBall, L"Resources/Sprite/soccerball.png");
 	texManager->LoadTexture(MyPlayer, L"Resources/Sprite/red.png");
@@ -19,12 +19,10 @@ void GamePlay::Initialize()
 	texManager->LoadTexture(Pitch, L"Resources/Sprite/pitch.png");
 	texManager->LoadTexture(Wall, L"Resources/Sprite/green.png");
 	texManager->LoadTexture(Net, L"Resources/Sprite/net.png");
-	texManager->LoadTexture(Ex, L"Resources/Sprite/ex.png");
-	texManager->LoadTexture(Rule, L"Resources/Sprite/Rule.png");
+	texManager->LoadTexture(BackGround, L"Resources/Sprite/background.png");
 	texManager->LoadTexture(KickOff, L"Resources/Sprite/kickoff.png");
 	texManager->LoadTexture(Score, L"Resources/Sprite/score.png");
 	texManager->LoadTexture(Goal, L"Resources/Sprite/goal!.png");
-	texManager->LoadTexture(Result, L"Resources/Sprite/result.png");
 #pragma endregion
 
 #pragma region スプライト生成
@@ -59,15 +57,6 @@ void GamePlay::Initialize()
 	// 背景画面
 	backGround = make_unique<Sprite>();
 	backGround->Initialize(BackGround);
-
-	// 操作説明
-	ex = make_unique<Sprite>();
-	ex->Initialize(Ex);
-
-	// 試合結果
-	result = make_unique<Sprite>();
-	result->Initialize(Result);
-
 #pragma endregion
 
 #pragma region 3Dモデル生成
@@ -171,14 +160,6 @@ void GamePlay::Update()
 
 	switch (scene)
 	{
-	case Scene::Explanation: // 操作説明
-		if (input->TriggerKey(DIK_SPACE)) // スペースキーを押す
-		{
-			// 操作説明からゲームへ
-			scene = Scene::CameraRotate;
-		}
-
-		break;
 	case Scene::CameraRotate: // カメラ回転
 		if (cameraEye.x > VERTICALEYE)
 		{
@@ -191,10 +172,8 @@ void GamePlay::Update()
 		}
 
 		Camera::GetInstance()->SetEye(XMFLOAT3(cameraEye.x, 30.0f, VERTICALEYE - cameraEye.x));
-		//camera->SetEye(cameraEye);
 
 		Camera::GetInstance()->SetTarget(XMFLOAT3(cameraEye.x / 4, 0.0f, 0.0f));
-		//camera->SetTarget(cameraTarget);
 
 		ObjectUpdate();
 		break;
@@ -236,16 +215,6 @@ void GamePlay::Update()
 		if (ballPos.x < myGoalPos.x) // 味方ゴールにボールが入った時
 		{
 			scene = Scene::CpuGoal; // 相手ゴール時シーンへ
-		}
-
-		if (input->TriggerKey(DIK_SPACE))
-		{
-			scene = Scene::MyGoal; // 味方ゴール時シーンへ
-		}
-
-		if (myScore >= VICTORYSCORE || cpuScore >= VICTORYSCORE) // どちらかのチームが３点取ったら
-		{
-			scene = Scene::Result;
 		}
 
 		break;
@@ -315,15 +284,6 @@ void GamePlay::Update()
 		scene = Scene::KickOffDirecting; // リスタート
 
 		break;
-	case Scene::Result: // 試合結果
-		if (input->TriggerKey(DIK_SPACE))
-		{
-			ResetGame(); // ゲームの初期化
-			// ゲームから　タイトルへ
-			scene = Scene::Explanation;
-		}
-
-		break;
 	}
 }
 
@@ -379,10 +339,6 @@ void GamePlay::DrawFrontSprite()
 
 	switch (scene)
 	{
-	case Scene::Explanation:
-		ex->Draw();
-
-		break;
 	case Scene::KickOffDirecting:
 		myScoreNumber->Draw();
 		cpuScoreNumber->Draw();
@@ -404,10 +360,6 @@ void GamePlay::DrawFrontSprite()
 		myScoreNumber->Draw();
 		cpuScoreNumber->Draw();
 		goalCha->Draw();
-
-		break;
-	case Scene::Result:
-		result->Draw();
 
 		break;
 	}

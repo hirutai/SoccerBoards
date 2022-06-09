@@ -29,8 +29,7 @@ enum texnumber
 	// 前景、背景用
 	BackGround, // 背景
 	TITLE, // タイトル
-	Ex, // 操作説明
-	Rule, // 勝利条件
+	Operation, // 操作
 	KickOff, // キックオフ
 	Score, // スコア
 	Goal, // ゴール！
@@ -344,10 +343,6 @@ private: // メンバ
 	unique_ptr<Sprite> backGround; // 背景
 #pragma endregion
 
-#pragma region 操作説明
-	unique_ptr<Sprite> ex; // 操作説明
-#pragma endregion
-
 #pragma region キックオフ画像
 #define KICKOFFVEL 7.5f // 文字の移動量
 #define LEFTEND -WindowsApi::windowWidth / 2 // 左端
@@ -395,10 +390,6 @@ private: // メンバ
 	XMFLOAT2 goalStartSize{ GOALCHARWIDTH, GOALCHARHEIGHT }; // ゴール！の初期サイズ
 
 	XMFLOAT2 goalChaSize{ goalStartSize }; // ゴール！のサイズ
-
-#pragma endregion 試合結果
-	unique_ptr<Sprite> result; // 試合結果
-#pragma region 
 
 #pragma region 物理
 private: // メンバ
@@ -461,6 +452,6 @@ private:
 	// 相手のゴール
 	void CpuGoal();
 
-	Scene scene = Scene::Explanation; // シーン管理
+	Scene scene = Scene::CameraRotate; // シーン管理
 #pragma endregion
 };

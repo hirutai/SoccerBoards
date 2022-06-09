@@ -171,6 +171,8 @@
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Scene\BaseGame.cpp" />
     <ClCompile Include="Scene\GamePlay.cpp" />
+    <ClCompile Include="Scene\Operation.cpp" />
+    <ClCompile Include="Scene\Result.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\SoccerBoards.cpp" />
     <ClCompile Include="Scene\main.cpp" />
@@ -195,6 +197,8 @@
     <ClInclude Include="Scene\BaseGame.h" />
     <ClInclude Include="Scene\BaseScene.h" />
     <ClInclude Include="Scene\GamePlay.h" />
+    <ClInclude Include="Scene\Operation.h" />
+    <ClInclude Include="Scene\Result.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\SoccerBoards.h" />
     <ClInclude Include="Scene\Title.h" />

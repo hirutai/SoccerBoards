@@ -1,7 +1,7 @@
 #include "Title.h"
-#include "GamePlay.h"
 #include "SceneManager.h"
 #include "Input.h"
+#include "Operation.h"
 
 using namespace std;
 
@@ -26,18 +26,17 @@ void Title::Update()
 {
 	if (Input::GetInstance()->TriggerKey(DIK_SPACE))
 	{
-		BaseScene* scene = new GamePlay();
+		BaseScene* scene = new Operation();
 		sceneManager->SetNextScene(scene);
 	}
 }
 
 void Title::DrawBackSprite()
 {
+	// ƒpƒCƒvƒ‰ƒCƒ“‚ÌÝ’è
 	Sprite::SetPipeline();
-
-	backGroundSprite->Draw(); // •`‰æ
-
-	titleSprite->Draw();
+	// ”wŒi‚Ì•`‰æ
+	backGroundSprite->Draw();
 }
 
 void Title::DrawObject()
@@ -46,6 +45,7 @@ void Title::DrawObject()
 
 void Title::DrawFrontSprite()
 {
+	// ƒ^ƒCƒgƒ‹‰æ‘œ‚Ì•`‰æ
 	titleSprite->Draw();
 }
 
