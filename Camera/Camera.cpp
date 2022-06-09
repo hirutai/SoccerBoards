@@ -2,6 +2,12 @@
 
 using namespace DirectX;
 
+Camera* Camera::GetInstance()
+{
+	static Camera instance;
+	return &instance;
+}
+
 void Camera::Initialize()
 {
 	const float distance = 30.0f;
@@ -31,7 +37,7 @@ void Camera::UpdateViewMatrix()
 void Camera::UpdateProjectionMatrix()
 {
 	// “§Ž‹“Š‰e
-	matProjection = 
+	matProjection =
 		XMMatrixPerspectiveFovLH(
 			XMConvertToRadians(60.0f),
 			(float)WindowsApi::windowWidth / WindowsApi::windowHeight,

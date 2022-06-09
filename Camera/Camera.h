@@ -8,6 +8,11 @@
 /// </summary>
 class Camera
 {
+#pragma region 静的メンバ関数
+public:
+	static Camera* GetInstance();
+#pragma endregion
+
 #pragma region エイリアス
 public:
 	using XMFLOAT3 = DirectX::XMFLOAT3;

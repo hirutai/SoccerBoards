@@ -16,6 +16,12 @@ private:
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 #pragma endregion
 
+#pragma region 静的メンバ関数
+public:
+	// インスタンスの生成
+	static Input* GetInstance();
+#pragma endregion
+
 #pragma region メンバ関数
 public:
 	/// <summary>
