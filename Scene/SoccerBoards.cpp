@@ -1,6 +1,8 @@
 #include "SoccerBoards.h"
 #include "Title.h"
+#include "Operation.h"
 #include "GamePlay.h"
+#include "Result.h"
 
 void SoccerBoards::Initialize()
 {

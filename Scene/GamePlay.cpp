@@ -1,10 +1,13 @@
 #include "GamePlay.h"
+#include "SceneManager.h"
 #include "Input.h"
 #include "TextureManager.h"
 #include "Camera.h"
 #include "Stadium.h"
 #include "Goal.h"
 #include "SoccerBall.h"
+#include "Result.h"
+#include "Title.h"
 
 using namespace std;
 using namespace DirectX;
@@ -107,10 +110,12 @@ void GamePlay::Initialize()
 	// 味方ゴール
 	myGoal = new Goal();
 	myGoal->Initialzie("mygoal", Net);
+	myGoal->SetPosition(XMFLOAT3(-4, 0, 0));
 
 	// 相手ゴール
 	cpuGoal = new Goal();
 	cpuGoal->Initialzie("cpugoal", Net);
+	cpuGoal->SetPosition(XMFLOAT3(4, 0, 0));
 
 	// サッカーボール
 	soccerBall = new SoccerBall();
@@ -125,6 +130,10 @@ void GamePlay::Initialize()
 	CreateGround();
 	// 壁
 	CreateWall();
+	// ゴール壁
+	CreateGoalWall();
+	// 天井
+	CreateCeiling();
 	// ボール
 	CreateBall();
 	// 味方フィールドプレイヤー（体と足）
@@ -161,6 +170,8 @@ void GamePlay::Update()
 
 		Camera::GetInstance()->SetTarget(XMFLOAT3(cameraEye.x / 4, 0.0f, 0.0f));
 
+		PhysicsUpdate();
+
 		ObjectUpdate();
 		break;
 	case Scene::KickOffDirecting: // キックオフ演出タイミング
@@ -192,6 +203,36 @@ void GamePlay::Update()
 		break;
 	case Scene::Game: // ゲーム
 
+		for (int i = 0; i < PLAYERNUM; i++)
+		{
+			cpuPlayerVel[i].setValue(pVelSwitching, 0.0f, 0.0f);
+
+			if (pSwitchingVelTime >= TWOSECONDS * 5.0f) // 一定時間経った時
+			{
+				pSwitchingVelTime = 0.0f; // 時間のリセット
+				pVelSwitching *= -1; // 移動量切り替え
+			}
+			else
+			{
+				pSwitchingVelTime++;
+			}
+		}
+
+		cpuKeaperVel.setValue(0.0f, 0.0f, kVelSwitching);
+
+		if (kSwitchingTime >= TWOSECONDS * 5.0f)
+		{
+			kSwitchingTime = 0.0f;
+			kVelSwitching *= -1;
+		}
+		else
+		{
+			kSwitchingTime++;
+		}
+
+		// 物理世界の更新
+		PhysicsUpdate();
+
 		ObjectUpdate();
 
 		XMFLOAT3 ballPos = soccerBall->GetPosition();
@@ -218,6 +259,8 @@ void GamePlay::Update()
 	case Scene::MyGoalDirecting: // 味方ゴール演出タイミング
 		if (goalChaMag >= ORIGINALSIZE) // 一定のサイズに拡大されるまで
 		{
+			//goalChaMag = 0.1f;
+
 			stopTime++; // 中央に止まっている時間をカウント
 
 			if (stopTime > TWOSECONDS) // ２秒経過したら
@@ -248,6 +291,8 @@ void GamePlay::Update()
 	case Scene::CpuGoalDirecting: // 相手ゴール演出タイミング
 		if (goalChaMag >= ORIGINALSIZE) // 一定のサイズに拡大されるまで
 		{
+			//goalChaMag = 0.1f;
+
 			stopTime++; // 中央に止まっている時間をカウント
 
 			if (stopTime > TWOSECONDS) // ２秒経過したら
@@ -268,6 +313,13 @@ void GamePlay::Update()
 		break;
 	case Scene::ResetStatus: // ゲーム中のリセット
 		ResetStatus();
+
+		if (myScore == 3 || cpuScore == 3)
+		{
+			// タイトルへ
+			BaseScene* scene = new Title();
+			sceneManager->SetNextScene(scene);
+		}
 
 		scene = Scene::KickOffDirecting; // リスタート
 
@@ -462,14 +514,14 @@ void GamePlay::CreateWall()
 {
 	for (int i = 0; i < lrWALLNUM; i++)
 	{
-		btScalar posZ = 11 - 11 * (i + i); // 左右壁のZ座標 i=0→11(ゴール奥の壁) i=1→-11(ゴール手前の壁)
+		btScalar posZ = 12.75 - 12.75 * (i + i); // 左右壁のZ座標 i=0→12.75(ゴール奥の壁) i=1→-12.75(ゴール手前の壁)
 
 		btScalar mass(0.); // 質量
 		bool isDynamic = (mass != 0.f);
 
 		// 左の壁
 		{
-			float lWallPos = -20; // 各左壁の座標
+			float lWallPos = -24; // 各左壁の座標
 
 			// 衝突形状の設定
 			cShapeLWall[i] = new btBoxShape(btVector3(btScalar(lrWallSize.x), btScalar(lrWallSize.y), btScalar(lrWallSize.z)));
@@ -505,7 +557,7 @@ void GamePlay::CreateWall()
 
 		// 右の壁
 		{
-			float rWallPos = 20; // 各右壁の座標
+			float rWallPos = 24; // 各右壁の座標
 
 			// 衝突形状の設定
 			cShapeRWall[i] = new btBoxShape(btVector3(btScalar(lrWallSize.x), btScalar(lrWallSize.y), btScalar(lrWallSize.z)));
@@ -541,7 +593,7 @@ void GamePlay::CreateWall()
 
 		// 上下の壁
 		{
-			float bWallStartPos = 15; // 奥壁の座標
+			float bWallStartPos = 18; // 奥壁の座標
 
 			// 衝突形状の設定
 			cShapeFBWall[i] = new btBoxShape(btVector3(btScalar(fbWallSize.x), btScalar(fbWallSize.y), btScalar(fbWallSize.z)));
@@ -553,7 +605,7 @@ void GamePlay::CreateWall()
 
 			btVector3 localInertia(0, 0, 0); // 慣性
 
-			// i = 0 奥壁のz座標 i = 1 前壁のz座標
+			// i = 0 前壁のz座標 i = 1 奥壁のz座標
 			btScalar posZ = bWallStartPos - bWallStartPos * (i + i);
 
 			// 初期座標を設定
@@ -578,6 +630,86 @@ void GamePlay::CreateWall()
 			dynamicsWorld->addRigidBody(rBodyFBWall[i]);
 		}
 	}
+}
+
+void GamePlay::CreateGoalWall()
+{
+	for (int i = 0; i < 2; i++)
+	{
+		// 衝突形状の設定
+		cShapeGoalWall[i] = new btBoxShape(btVector3(btScalar(0.1f), btScalar(6.0f), btScalar(7.25f)));
+		// 衝突形状配列に追加
+		collisionShapes.push_back(cShapeGoalWall[i]);
+
+		btTransform startTransform; // 初期座標用
+		startTransform.setIdentity();
+
+		btScalar mass(0.); // 質量
+
+		btVector3 localInertia(0, 0, 0); // 慣性
+
+		btScalar posX = -24.0f + 48.0f * i;
+
+		// 初期座標を設定
+		startTransform.setOrigin(btVector3(posX, 12.0f, 0.0f));
+
+		bool isDynamic = (mass != 0.f);
+
+		// 質量が０以外なら動的（TRUE）、それ以外は静的（FALSE）
+		if (isDynamic)
+		{
+			cShapeGoalWall[i]->calculateLocalInertia(mass, localInertia);
+		}
+
+		// 移動状態
+		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+
+		// 剛体作成に必要な情報
+		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, cShapeGoalWall[i], localInertia);
+
+		// 剛体作成
+		rBodyGoalWall[i] = new btRigidBody(rbInfo);
+
+		// 物理世界に剛体を登録
+		dynamicsWorld->addRigidBody(rBodyGoalWall[i]);
+	}
+}
+
+void GamePlay::CreateCeiling()
+{
+	// 衝突形状の設定
+	cShapeCeiling = new btBoxShape(btVector3(btScalar(pitchSize.x), btScalar(pitchSize.y), btScalar(pitchSize.z)));
+	// 衝突形状配列に追加
+	collisionShapes.push_back(cShapeCeiling);
+
+	btTransform startTransform; // 初期座標用
+	startTransform.setIdentity();
+
+	btScalar mass(0.); // 質量
+
+	btVector3 localInertia(0, 0, 0); // 慣性
+
+	// 初期座標を設定
+	startTransform.setOrigin(btVector3(0, 12.0f, 0));
+
+	// 質量が０以外なら動的（TRUE）、それ以外は静的（FALSE）
+	bool isDynamic = (mass != 0.f);
+	if (isDynamic)
+	{
+		cShapeCeiling->calculateLocalInertia(mass, localInertia);
+	}
+
+	// 移動状態
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+
+	// 剛体作成に必要な情報
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, cShapeCeiling, localInertia);
+
+	// 剛体作成
+	rBodyCeiling = new btRigidBody(rbInfo);
+
+	// 物理世界に剛体を登録
+	dynamicsWorld->addRigidBody(rBodyCeiling);
 }
 
 void GamePlay::CreateBall()
@@ -616,7 +748,7 @@ void GamePlay::CreateBall()
 
 	// 摩擦の設定
 	rBodyBall->setRollingFriction(0.5f);
-	rBodyBall->setSpinningFriction(0.1f);
+	rBodyBall->setSpinningFriction(0.5f);
 	rBodyBall->setFriction(0.5f);
 	rBodyBall->setAnisotropicFriction(cShapeBall->getAnisotropicRollingFrictionDirection(), btCollisionObject::CF_ANISOTROPIC_ROLLING_FRICTION);
 
@@ -920,7 +1052,7 @@ void GamePlay::PhysicsUpdate()
 		// ボールの座標の取得
 		btVector3 transPos = trans.getOrigin();
 		// XMFLOAT3型に変換
-		XMFLOAT3 physicsPos = { transPos.getX(), transPos.getY(), transPos.getZ() };
+		XMFLOAT3 physicsPos = XMFLOAT3(transPos.getX(), transPos.getY(), transPos.getZ());
 		// 座標の設定
 		soccerBall->SetPosition(physicsPos);
 
@@ -932,7 +1064,7 @@ void GamePlay::PhysicsUpdate()
 		// 度に変換
 		btVector3 convertRot = btVector3(XMConvertToDegrees((float)rollX), XMConvertToDegrees((float)pitchY), XMConvertToDegrees((float)yawZ));
 		// XMFLOAT3型に変換
-		XMFLOAT3 physicsRot = { convertRot.getX(), convertRot.getY(), convertRot.getZ() };
+		XMFLOAT3 physicsRot = XMFLOAT3(convertRot.getX(), convertRot.getY(), convertRot.getZ());
 		// 角度の設定
 		soccerBall->SetAngle(physicsRot);
 	}
@@ -1252,48 +1384,21 @@ void GamePlay::PhysicsUpdate()
 				trans2 = rBodyCpuFoot[i]->getWorldTransform();
 			}
 
-			cpuPlayerVel[i].setValue(pVelSwitching, 0.0f, 0.0f);
+			//cpuPlayerVel[i].setValue(pVelSwitching, 0.0f, 0.0f);
 
-			if (pSwitchingVelTime >= TWOSECONDS * 10.0f) // 一定時間経った時
-			{
-				pSwitchingVelTime = 0.0f; // 時間のリセット
-				pVelSwitching *= -1; // 移動量切り替え
-			}
-			else
-			{
-				pSwitchingVelTime++;
-			}
+			//if (pSwitchingVelTime >= TWOSECONDS * 5.0f) // 一定時間経った時
+			//{
+			//	pSwitchingVelTime = 0.0f; // 時間のリセット
+			//	pVelSwitching *= -1; // 移動量切り替え
+			//}
+			//else
+			//{
+			//	pSwitchingVelTime++;
+			//}
 
 			// 体、足の座標の更新
 			trans.setOrigin(trans.getOrigin() + cpuPlayerVel[i]);
 			trans2.setOrigin(trans2.getOrigin() + cpuPlayerVel[i]);
-
-			// 一旦放置
-			//if (pSwitchingRotTime >= 2.0f) // 一定時間経った時
-			//{
-			//	rotatePlayerFlag = true; // 回転開始
-
-			//	if (rotatePlayerFlag)
-			//	{
-			//		if (cpuPlayerRotationValue > 3.14f * 2)
-			//		{
-			//			pSwitchingRotTime = 0.0f;
-			//			cpuPlayerRotationValue = 0.0f; // 時間のリセット
-			//			rotatePlayerFlag = false; // 回転終了
-			//			laRSwitching *= -1.0f; // 左右切り替え
-			//		}
-			//		else
-			//		{
-			//			cpuPlayerRotationValue += 0.05f * laRSwitching; // 回転
-			//		}
-			//	}
-			//}
-			//else
-			//{
-			//	pSwitchingRotTime += 0.1f / 60 * 2;
-			//}
-
-			//cpuPlayerRot[i].setX(cpuPlayerRotationValue);
 
 			// 体、足の角度の更新
 			btQuaternion transRot = trans.getRotation();
@@ -1458,9 +1563,9 @@ void GamePlay::PhysicsUpdate()
 			trans = rBodyCpuKeaper->getWorldTransform();
 		}
 
-		cpuKeaperVel.setValue(0.0f, 0.0f, kVelSwitching);
+		/*cpuKeaperVel.setValue(0.0f, 0.0f, kVelSwitching);
 
-		if (kSwitchingTime >= TWOSECONDS * 10.0f)
+		if (kSwitchingTime >= TWOSECONDS * 5.0f)
 		{
 			kSwitchingTime = 0.0f;
 			kVelSwitching *= -1;
@@ -1468,7 +1573,7 @@ void GamePlay::PhysicsUpdate()
 		else
 		{
 			kSwitchingTime++;
-		}
+		}*/
 
 		if (trans.getOrigin().getZ() < cKMINPOS)
 		{
@@ -1491,11 +1596,6 @@ void GamePlay::PhysicsUpdate()
 		SetPosition(cpuKeaperPos, physicsPos);
 	}
 #pragma endregion
-}
-
-void GamePlay::PhysicsMoveUpdate()
-{
-
 }
 
 void GamePlay::SetPosition(XMFLOAT3& objPos, const btVector3& phyPos)
@@ -1521,19 +1621,17 @@ void GamePlay::ResetStatus()
 {
 	CreateBall(); // ボールを再生成
 
-	CreateMyPlayer();
-	CreateCpuKeaper();
+	//CreateMyPlayer();
+	//CreateCpuPlayer();
 
 	kickoffPos = kickoffStartPos; // 初期位置にリセット
 
 	goalCha->SetSize(goalStartSize.x, goalStartSize.y); // 初期サイズにリセット
+	goalChaMag = 0.1f;
 }
 
 void GamePlay::ObjectUpdate()
 {
-	// 物理世界の更新
-	PhysicsUpdate();
-
 	// カメラの更新
 	Camera* camera = Camera::GetInstance();
 

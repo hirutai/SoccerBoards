@@ -30,6 +30,11 @@ void Goal::Draw()
 #pragma endregion
 }
 
+void Goal::SetPosition(XMFLOAT3 position)
+{
+	objectGoal->SetPosition(position);
+}
+
 void Goal::ModelInit(const std::string& modelName, const UINT& netTexNum)
 {
 	modelGoal = make_unique<Obj3dModel>();

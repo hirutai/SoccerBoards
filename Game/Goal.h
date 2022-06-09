@@ -34,6 +34,8 @@ public:
 	void Update();
 	// •`‰æ
 	void Draw();
+
+	void SetPosition(XMFLOAT3 position);
 #pragma endregion
 
 #pragma region ƒƒ“ƒoŠÖ”

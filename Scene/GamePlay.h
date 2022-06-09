@@ -122,7 +122,7 @@ private: // メンバ
 	SoccerBall* soccerBall = nullptr; // サッカーボール
 
 	// 物理用
-	btVector3 ballStartPos{ 0, 20, 0 }; // ボールの初期座標
+	btVector3 ballStartPos{ 0, 10, 0 }; // ボールの初期座標
 
 	const float ballRadius = 3.0f / 2; // ボールの半径
 	btCollisionShape* cShapeBall = nullptr; // 衝突形状
@@ -137,25 +137,25 @@ private: // 定数
 #define PI 3.14159265 // 円周率
 #define CIRCLELENGTH PI * 2.0f // 一周の長さ 
 
-#define L1STARTPOS 11.0f // １ライン目の選手の初期Z座標
-#define PLAYERINTERVAL 5.5f // 選手のZ座標の間隔
+#define L1STARTPOS 13.5f // １ライン目の選手の初期Z座標
+#define PLAYERINTERVAL 6.75f // 選手のZ座標の間隔
 
 private: // メンバ
-	const XMFLOAT2 bodySize{ 3.0f / 2, 6.5f }; // 体の大きさ（x 半径、 y 高さ）
-	const XMFLOAT3 footSize{ 5.5f / 2, 1.5f / 2, 1.5f / 2 }; // 足の大きさ（x 幅 / 2、 y 高さ / 2、 z 深さ / 2）
+	const XMFLOAT2 bodySize{ 2.5f / 2, 4.0f / 2 }; // 体の大きさ（x 半径、 y 高さ）
+	const XMFLOAT3 footSize{ 6.5f / 2, 1.5f / 2, 1.5f / 2 }; // 足の大きさ（x 幅、 y 高さ、 z 深さ）
 #pragma endregion
 
 #pragma region 味方選手設定
-#define mL1MINPOS -16.0f // １ライン目の選手の移動範囲
-#define mL1MAXPOS 16.0f
+#define mL1MINPOS -19.0f // １ライン目の選手の移動範囲
+#define mL1MAXPOS 19.0f
 #define mL2MINPOS 1.0f // ２ライン目の選手の移動範囲
-#define mL2MAXPOS 16.0f
-#define mL3MINPOS -16.0f // ３ライン目の選手の移動範囲
+#define mL2MAXPOS 19.0f
+#define mL3MINPOS -19.0f // ３ライン目の選手の移動範囲
 #define mL3MAXPOS -1.0f
 #define mL4MINPOS 1.0f // ４ライン目の選手の移動範囲
-#define mL4MAXPOS 16.0f
-#define mL5MINPOS -16.0f // ５ライン目の選手の移動範囲
-#define mL5MAXPOS 16.0f
+#define mL4MAXPOS 19.0f
+#define mL5MINPOS -19.0f // ５ライン目の選手の移動範囲
+#define mL5MAXPOS 19.0f
 #define mKMINPOS -5.0f // キーパーの移動範囲
 #define mKMAXPOS 5.0f
 
@@ -209,21 +209,21 @@ private: // ゴールキーパー
 
 	btVector3 myKeaperVel{}; // 速度
 
-	btVector3 myKeaperStartPos{ -23, BodyHeight, 0 }; // ゴールキーパーの初期座標
+	btVector3 myKeaperStartPos{ -22, BodyHeight, 0 }; // ゴールキーパーの初期座標
 #pragma endregion
 
 #pragma region 相手選手
 private: // 定数
-#define cL1MINPOS -16.0f // １ライン目の選手の移動範囲
-#define cL1MAXPOS 16.0f
-#define cL2MINPOS -16.0f // ２ライン目の選手の移動範囲
+#define cL1MINPOS -19.0f // １ライン目の選手の移動範囲
+#define cL1MAXPOS 19.0f
+#define cL2MINPOS -19.0f // ２ライン目の選手の移動範囲
 #define cL2MAXPOS -1.0f
 #define cL3MINPOS 1.0f // ３ライン目の選手の移動範囲
-#define cL3MAXPOS 16.0f
-#define cL4MINPOS -16.0f // ４ライン目の選手の移動範囲
+#define cL3MAXPOS 19.0f
+#define cL4MINPOS -19.0f // ４ライン目の選手の移動範囲
 #define cL4MAXPOS -1.0f
-#define cL5MINPOS -16.0f // ５ライン目の選手の移動範囲
-#define cL5MAXPOS 16.0f
+#define cL5MINPOS -19.0f // ５ライン目の選手の移動範囲
+#define cL5MAXPOS 19.0f
 #define cKMINPOS -5.0f // キーパーの移動範囲
 #define cKMAXPOS 5.0f
 
@@ -266,7 +266,7 @@ private: // ゴールキーパー
 
 	btVector3 cpuKeaperVel{}; // 移動量
 
-	btVector3 cpuKeaperStartPos{ 23, BodyHeight, 0 }; // 相手ゴールキーパーの初期座標
+	btVector3 cpuKeaperStartPos{ 22, BodyHeight, 0 }; // 相手ゴールキーパーの初期座標
 #pragma endregion
 
 	// AI用
@@ -294,7 +294,7 @@ private: // メンバ
 
 	float lrWallHalf = 11.0f / 2; // 左右壁のZ軸の半分のサイズ
 
-	const XMFLOAT3 lrWallSize{ 0.1f / 2, 100.0f / 2, lrWallHalf }; // 左右壁のx 幅 / 2、 y 高さ / 2、 z 深さ / 2
+	const XMFLOAT3 lrWallSize{ 0.1f / 2, 24.0f / 2, lrWallHalf }; // 左右壁のx 幅 / 2、 y 高さ / 2、 z 深さ / 2
 
 	// 左壁の物理用
 	btCollisionShape* cShapeLWall[2]; // 衝突形状
@@ -304,11 +304,15 @@ private: // メンバ
 	btCollisionShape* cShapeRWall[2]; // 衝突形状
 	btRigidBody* rBodyRWall[2]; // 剛体
 
-	const XMFLOAT3 fbWallSize{ 48.0f / 2, 100.0f / 2, 0.1f / 2 }; // 前奥壁のx 幅 / 2, y 高さ / 2、 z 深さ / 2
+	const XMFLOAT3 fbWallSize{ 48.0f / 2, 24.0f / 2, 0.1f / 2 }; // 前奥壁のx 幅 / 2, y 高さ / 2、 z 深さ / 2
 
 	// 前奥壁の物理用
 	btCollisionShape* cShapeFBWall[2]; // 衝突形状
 	btRigidBody* rBodyFBWall[2]; // 剛体
+
+	// 天井の物理用
+	btCollisionShape* cShapeCeiling; // 衝突形状
+	btRigidBody* rBodyCeiling; // 剛体
 #pragma endregion
 
 #pragma region ゴール
@@ -318,7 +322,11 @@ private: // メンバ
 	btCollisionShape* cShapeMyGoal = nullptr; // 衝突形状
 	btRigidBody* rBodyMyGoal = nullptr; // 剛体
 
-	XMFLOAT3 myGoalPos{ -24.0f, 0.0f, 0.0f }; // 座標
+	// 味方ゴール上の壁
+	btCollisionShape* cShapeGoalWall[2]; // 衝突形状
+	btRigidBody* rBodyGoalWall[2]; // 剛体
+
+	XMFLOAT3 myGoalPos{ -25.5f, 0.0f, 0.0f }; // 座標
 
 	Goal* cpuGoal = nullptr; // 相手ゴール
 
@@ -326,7 +334,7 @@ private: // メンバ
 	btCollisionShape* cShapeCpuGoal = nullptr; // 衝突形状
 	btRigidBody* rBodyCpuGoal = nullptr; // 剛体
 
-	XMFLOAT3 cpuGoalPos{ 24.0f, 0.0f, 0.0f }; // 座標
+	XMFLOAT3 cpuGoalPos{ 25.5f, 0.0f, 0.0f }; // 座標
 #pragma endregion
 
 #pragma region 背景画像
@@ -391,6 +399,10 @@ private: // メンバ
 	void CreateGround();
 	// 壁の作成
 	void CreateWall();
+	// ゴール壁の作成
+	void CreateGoalWall();
+	// 天井の作成
+	void CreateCeiling();
 	// ボールの作成
 	void CreateBall();
 	// 味方フィールドプレイヤーの作成（体と足）
@@ -424,9 +436,6 @@ private: // メンバ
 
 #pragma region ゲーム
 private:
-	// スプライト生成関数
-	void CreateSprite();
-
 	// オブジェクトの更新処理
 	void ObjectUpdate();
 
