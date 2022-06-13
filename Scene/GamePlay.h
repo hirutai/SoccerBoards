@@ -146,18 +146,18 @@ private: // メンバ
 #pragma endregion
 
 #pragma region 味方選手設定
-#define mL1MINPOS -19.0f // １ライン目の選手の移動範囲
-#define mL1MAXPOS 19.0f
+#define mL1MINPOS -20.0f // １ライン目の選手の移動範囲
+#define mL1MAXPOS 20.0f
 #define mL2MINPOS 1.0f // ２ライン目の選手の移動範囲
 #define mL2MAXPOS 19.0f
 #define mL3MINPOS -19.0f // ３ライン目の選手の移動範囲
 #define mL3MAXPOS -1.0f
 #define mL4MINPOS 1.0f // ４ライン目の選手の移動範囲
 #define mL4MAXPOS 19.0f
-#define mL5MINPOS -19.0f // ５ライン目の選手の移動範囲
-#define mL5MAXPOS 19.0f
-#define mKMINPOS -5.0f // キーパーの移動範囲
-#define mKMAXPOS 5.0f
+#define mL5MINPOS -20.0f // ５ライン目の選手の移動範囲
+#define mL5MAXPOS 20.0f
+#define mKMINPOS -7.0f // キーパーの移動範囲
+#define mKMAXPOS 7.0f
 
 #define myPlayerSpeVal 0.2f // フィールドプレイヤの速さ
 #define myPlayerRotVal 0.05f // 味方選手の回転量
@@ -214,18 +214,18 @@ private: // ゴールキーパー
 
 #pragma region 相手選手
 private: // 定数
-#define cL1MINPOS -19.0f // １ライン目の選手の移動範囲
-#define cL1MAXPOS 19.0f
+#define cL1MINPOS -20.0f // １ライン目の選手の移動範囲
+#define cL1MAXPOS 20.0f
 #define cL2MINPOS -19.0f // ２ライン目の選手の移動範囲
 #define cL2MAXPOS -1.0f
 #define cL3MINPOS 1.0f // ３ライン目の選手の移動範囲
 #define cL3MAXPOS 19.0f
 #define cL4MINPOS -19.0f // ４ライン目の選手の移動範囲
 #define cL4MAXPOS -1.0f
-#define cL5MINPOS -19.0f // ５ライン目の選手の移動範囲
-#define cL5MAXPOS 19.0f
-#define cKMINPOS -5.0f // キーパーの移動範囲
-#define cKMAXPOS 5.0f
+#define cL5MINPOS -20.0f // ５ライン目の選手の移動範囲
+#define cL5MAXPOS 20.0f
+#define cKMINPOS -7.0f // キーパーの移動範囲
+#define cKMAXPOS 7.0f
 
 private: // フィールドプレイヤー
 	// 全体描画用
@@ -284,7 +284,7 @@ private: // ゴールキーパー
 	Stadium* stadium = nullptr; // スタジアム
 
 private: // メンバ
-	const XMFLOAT3 pitchSize{ 48.0f / 2, 0.0f, 36.0f / 2 }; // ピッチのx 幅 / 2、 y 高さ / 2、 z 深さ / 2
+	const XMFLOAT3 pitchSize{ 48.0f / 2, 1.0f, 36.0f / 2 }; // ピッチのx 幅 / 2、 y 高さ / 2、 z 深さ / 2
 
 	// ピッチの物理用
 	btCollisionShape* cShapeGround = nullptr; // 衝突形状
@@ -292,9 +292,9 @@ private: // メンバ
 
 #define lrWALLNUM 2 // 左右壁の数
 
-	float lrWallHalf = 11.0f / 2; // 左右壁のZ軸の半分のサイズ
+	float lrWallHalf = 11.5f / 2; // 左右壁のZ軸の半分のサイズ
 
-	const XMFLOAT3 lrWallSize{ 0.1f / 2, 24.0f / 2, lrWallHalf }; // 左右壁のx 幅 / 2、 y 高さ / 2、 z 深さ / 2
+	const XMFLOAT3 lrWallSize{ 1.0f / 2, 12.0f / 2, lrWallHalf }; // 左右壁のx 幅 / 2、 y 高さ / 2、 z 深さ / 2
 
 	// 左壁の物理用
 	btCollisionShape* cShapeLWall[2]; // 衝突形状
@@ -304,7 +304,7 @@ private: // メンバ
 	btCollisionShape* cShapeRWall[2]; // 衝突形状
 	btRigidBody* rBodyRWall[2]; // 剛体
 
-	const XMFLOAT3 fbWallSize{ 48.0f / 2, 24.0f / 2, 0.1f / 2 }; // 前奥壁のx 幅 / 2, y 高さ / 2、 z 深さ / 2
+	const XMFLOAT3 fbWallSize{ 48.0f / 2, 12.0f / 2, 1.0f / 2 }; // 前奥壁のx 幅 / 2, y 高さ / 2、 z 深さ / 2
 
 	// 前奥壁の物理用
 	btCollisionShape* cShapeFBWall[2]; // 衝突形状
@@ -388,6 +388,9 @@ private: // メンバ
 	XMFLOAT2 goalStartSize{ GOALCHARWIDTH, GOALCHARHEIGHT }; // ゴール！の初期サイズ
 
 	XMFLOAT2 goalChaSize{ goalStartSize }; // ゴール！のサイズ
+#pragma endregion
+
+	unique_ptr<Sprite> pressUI;
 
 #pragma region 物理
 private: // メンバ

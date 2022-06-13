@@ -637,7 +637,7 @@ void GamePlay::CreateGoalWall()
 	for (int i = 0; i < 2; i++)
 	{
 		// 衝突形状の設定
-		cShapeGoalWall[i] = new btBoxShape(btVector3(btScalar(0.1f), btScalar(6.0f), btScalar(7.25f)));
+		cShapeGoalWall[i] = new btBoxShape(btVector3(btScalar(1.0f), btScalar(6.0f), btScalar(7.25f)));
 		// 衝突形状配列に追加
 		collisionShapes.push_back(cShapeGoalWall[i]);
 
@@ -1621,8 +1621,11 @@ void GamePlay::ResetStatus()
 {
 	CreateBall(); // ボールを再生成
 
-	//CreateMyPlayer();
-	//CreateCpuPlayer();
+	CreateMyPlayer();
+	CreateCpuPlayer();
+
+	PhysicsUpdate();
+	ObjectUpdate();
 
 	kickoffPos = kickoffStartPos; // 初期位置にリセット
 
